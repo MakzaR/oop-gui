@@ -3,7 +3,6 @@ from sys import argv
 from PyQt5.QtWidgets import QApplication
 
 from src.login_window import LoginForm
-from src.main_window import MainWindow
 
 
 class Main:

@@ -1,6 +1,7 @@
-from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QWidget, QMainWindow
+from PyQt5.QtWidgets import (
+    QMainWindow,
+)
 
 from src.main_window import MainWindow
 from ui.auth_form import Ui_AuthorizationForm
@@ -19,6 +20,8 @@ class LoginForm(Ui_AuthorizationForm, QMainWindow):
     def init(self):
         self.show()
 
+    """Тут нужно добавить валидацию, возможно добавить обработку исключений сервера"""
+
     def auth(self):
         self.close()
-        self.mainWindow.show()
+        self.mainWindow.init()
