@@ -1,7 +1,5 @@
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import (
-    QMainWindow,
-)
+from PyQt5.QtWidgets import QMainWindow
 
 from src.main_window import MainWindow
 from ui.auth_form import Ui_AuthorizationForm
