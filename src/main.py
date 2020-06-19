@@ -13,8 +13,12 @@ class Main:
         self.loginForm.init()
 
 
-if __name__ == '__main__':
+def main():
     app = QApplication(argv)
-    main = Main()
-    main.launch()
+    main_ = Main()
+    main_.launch()
     app.exec_()
+
+
+if __name__ == '__main__':
+    main()

@@ -26,4 +26,7 @@ format:
 	$(VENV)/bin/autoflake --recursive --in-place --remove-all-unused-imports $(ALL)
 	$(VENV)/bin/unify --in-place --recursive $(ALL)
 
+run:
+	start_gui
+
 ci:	lint test
