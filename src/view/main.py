@@ -2,7 +2,7 @@ from sys import argv
 
 from PyQt5.QtWidgets import QApplication
 
-from src.login_window import LoginForm
+from src.view.login_window import LoginForm
 
 
 class Main:

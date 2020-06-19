@@ -4,7 +4,8 @@ from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMainWindow, QTableWidgetItem, QPushButton
 
-from src.currency_window import CurrencyWindow
+from src.models.user import User
+from src.view.currency_window import CurrencyWindow
 from ui.main import Ui_MainWindow
 
 
@@ -103,9 +104,9 @@ class MainWindow(Ui_MainWindow, QMainWindow):
 
     def fill_my_currencies(self):
         self.myCurrenciesTable.clear()
+
         labels = ['Название', 'Цена', 'Изменение', '']
         create_headers(self.myCurrenciesTable, labels)
-
         for i in my_currencies_data:
             detail_button = QPushButton('Подробнее')
             detail_button.clicked.connect(self.show_details)
@@ -138,7 +139,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     def show_details(self):
         self.currencyWindow.init()
 
-    def init(self):
+    def init(self, user: User):
         self.fill_all_currencies()
         self.fill_my_currencies()
         self.fill_operations()
