@@ -2,8 +2,9 @@ from typing import NamedTuple
 
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QMainWindow, QTableWidgetItem, QPushButton
+from PyQt5.QtWidgets import QMainWindow, QPushButton, QTableWidgetItem
 
+from src.DAL.client import Client
 from src.models.user import User
 from src.view.currency_window import CurrencyWindow
 from ui.main import Ui_MainWindow
@@ -73,12 +74,15 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self.refreshButton.clicked.connect(self.refresh_tables)
 
         self.currencyWindow = CurrencyWindow(self)
+        self._client = Client()
 
     '''Логика кнопки поиска'''
+
     def search_item(self):
         pass
 
     '''Логика кнопки обновления'''
+
     def refresh_tables(self):
         pass
 
@@ -86,10 +90,11 @@ class MainWindow(Ui_MainWindow, QMainWindow):
 
     def fill_all_currencies(self):
         self.allCurrenciesTable.clear()
-        labels = ['Название', 'Цена', 'Изменение', '']
+        currencies = self._client.get_currencies()
+        labels = ['Название', 'Цена продажи', 'Цена покупки', '']
         create_headers(self.allCurrenciesTable, labels)
 
-        for i in all_currencies_data:
+        for i in currencies:
             detail_button = QPushButton('Подробнее')
             detail_button.clicked.connect(self.show_details)
 
@@ -97,15 +102,15 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             self.allCurrenciesTable.setRowCount(row + 1)
 
             self.allCurrenciesTable.setItem(row, 0, QTableWidgetItem(i.name))
-            self.allCurrenciesTable.setItem(row, 1, QTableWidgetItem(str(i.price)))
-            self.allCurrenciesTable.setItem(row, 2, QTableWidgetItem(i.change))
+            self.allCurrenciesTable.setItem(row, 1, QTableWidgetItem(str(i.selling_price)))
+            self.allCurrenciesTable.setItem(row, 2, QTableWidgetItem(str(i.purchasing_price)))
 
             self.allCurrenciesTable.setCellWidget(row, 3, detail_button)
 
     def fill_my_currencies(self):
         self.myCurrenciesTable.clear()
 
-        labels = ['Название', 'Цена', 'Изменение', '']
+        labels = ['Название', 'Колличество','Цена продажи', 'Цена покупки', '']
         create_headers(self.myCurrenciesTable, labels)
         for i in my_currencies_data:
             detail_button = QPushButton('Подробнее')
@@ -116,7 +121,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
 
             self.myCurrenciesTable.setItem(row, 0, QTableWidgetItem(i.name))
             self.myCurrenciesTable.setItem(row, 1, QTableWidgetItem(str(i.price)))
-            self.myCurrenciesTable.setItem(row, 2, QTableWidgetItem(i.change))
+            self.myCurrenciesTable.setItem(row, 2, QTableWidgetItem(str(i.price)))
 
             self.myCurrenciesTable.setCellWidget(row, 3, detail_button)
 
@@ -126,7 +131,6 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         create_headers(self.operationsTable, labels)
 
         for i in operation_data:
-
             row = self.operationsTable.rowCount()
             self.operationsTable.setRowCount(row + 1)
 
@@ -136,6 +140,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             self.operationsTable.setItem(row, 3, QTableWidgetItem(i.account))
 
     '''Логика кнопки "Подробнее"'''
+
     def show_details(self):
         self.currencyWindow.init()
 
