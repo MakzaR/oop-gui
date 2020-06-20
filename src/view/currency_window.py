@@ -5,6 +5,8 @@ import pyqtgraph as pg
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMainWindow
 
+from src.view.buy_window import BuyWindow
+from src.view.sell_wndow import SellWindow
 from ui.currency import Ui_CurrencyWindow
 
 selling_prices = [1.337, 1.488, 1.556, 1.246, 1.889]
@@ -21,15 +23,15 @@ time_dict = dict(enumerate(time))
 
 
 class CurrencyWindow(Ui_CurrencyWindow, QMainWindow):
-
-    '''Вернуть parent'''
-
     def __init__(self, parent):
         super().__init__(parent, Qt.WindowCloseButtonHint | Qt.WindowMinimizeButtonHint)
         self.setupUi(self)
 
         self.buyButton.clicked.connect(self.buy)
         self.sellButton.clicked.connect(self.sell)
+
+        self.buy_window = BuyWindow(self)
+        self.sell_window = SellWindow(self)
 
         self.set_text_info(selling_prices[-1], buying_prices[-1], Decimal('3.0012'))
 
@@ -87,10 +89,11 @@ class CurrencyWindow(Ui_CurrencyWindow, QMainWindow):
         )
 
     def buy(self):
-        pass
+        self.buy_window.init()
 
     def sell(self):
-        pass
+
+        self.sell_window.init()
 
     def init(self):
         self.draw_graphs()
