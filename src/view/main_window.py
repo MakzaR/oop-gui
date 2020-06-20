@@ -1,5 +1,3 @@
-from threading import Thread
-from typing import NamedTuple
 
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
@@ -8,47 +6,11 @@ from requests.exceptions import ConnectionError
 
 from src.DAL.client import Client
 from src.message import Message
+from src.models.operation import OperationType
 from src.models.user import User
 from src.view.currency_window import CurrencyWindow
 from src.view.utils import show_error
 from ui.main import Ui_MainWindow
-
-
-class OperationData(NamedTuple):
-    type: str
-    name: str
-    amount: int
-    account: str
-
-
-operation_data = [
-    OperationData('Продажа', 'Биток', 20, '+ 20 у. е.'),
-    OperationData('Продажа', 'Биток', 20, '+ 20 у. е.'),
-    OperationData('Продажа', 'Биток', 20, '+ 20 у. е.'),
-    OperationData('Продажа', 'Биток', 20, '+ 20 у. е.'),
-    OperationData('Продажа', 'Биток', 20, '+ 20 у. е.'),
-    OperationData('Продажа', 'Биток', 20, '+ 20 у. е.'),
-    OperationData('Продажа', 'Биток', 20, '+ 20 у. е.'),
-    OperationData('Продажа', 'Биток', 20, '+ 20 у. е.'),
-    OperationData('Продажа', 'Биток', 20, '+ 20 у. е.'),
-    OperationData('Продажа', 'Биток', 20, '+ 20 у. е.'),
-    OperationData('Продажа', 'Биток', 20, '+ 20 у. е.'),
-    OperationData('Продажа', 'Биток', 20, '+ 20 у. е.'),
-    OperationData('Продажа', 'Биток', 20, '+ 20 у. е.'),
-    OperationData('Продажа', 'Биток', 20, '+ 20 у. е.'),
-    OperationData('Продажа', 'Биток', 20, '+ 20 у. е.'),
-    OperationData('Продажа', 'Биток', 20, '+ 20 у. е.'),
-    OperationData('Продажа', 'Биток', 20, '+ 20 у. е.'),
-    OperationData('Продажа', 'Биток', 20, '+ 20 у. е.'),
-    OperationData('Продажа', 'Биток', 20, '+ 20 у. е.'),
-    OperationData('Продажа', 'Биток', 20, '+ 20 у. е.'),
-    OperationData('Продажа', 'Биток', 20, '+ 20 у. е.'),
-    OperationData('Продажа', 'Биток', 20, '+ 20 у. е.'),
-    OperationData('Продажа', 'Биток', 20, '+ 20 у. е.'),
-    OperationData('Продажа', 'Биток', 20, '+ 20 у. е.'),
-    OperationData('Продажа', 'Биток', 20, '+ 20 у. е.'),
-    OperationData('Продажа', 'Биток', 20, '+ 20 у. е.'),
-]
 
 
 class MainWindow(Ui_MainWindow, QMainWindow):
@@ -124,17 +86,18 @@ class MainWindow(Ui_MainWindow, QMainWindow):
 
     def fill_operations(self):
         self.operationsTable.clear()
-        labels = ['Операция', 'Название', 'Количество', 'Счёт']
+        labels = ['Операция', 'Название', 'Количество']
         create_headers(self.operationsTable, labels)
-
-        for i in operation_data:
+        operations = self._client.get_operations(self.user.id)
+        for i in operations:
             row = self.operationsTable.rowCount()
             self.operationsTable.setRowCount(row + 1)
 
-            self.operationsTable.setItem(row, 0, QTableWidgetItem(i.type))
-            self.operationsTable.setItem(row, 1, QTableWidgetItem(i.name))
-            self.operationsTable.setItem(row, 2, QTableWidgetItem(str(i.amount)))
-            self.operationsTable.setItem(row, 3, QTableWidgetItem(i.account))
+            self.operationsTable.setItem(
+                row, 0, QTableWidgetItem('Покупка' if i.operation_type == OperationType.BUY else 'Продажа')
+            )
+            self.operationsTable.setItem(row, 1, QTableWidgetItem(i.currency_name))
+            self.operationsTable.setItem(row, 2, QTableWidgetItem((str(i.amount))))
 
     '''Логика кнопки "Подробнее"'''
 

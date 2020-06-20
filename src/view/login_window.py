@@ -20,8 +20,6 @@ class LoginForm(Ui_AuthorizationForm, QMainWindow):
     def init(self):
         self.show()
 
-    """Тут нужно добавить валидацию, возможно добавить обработку исключений сервера"""
-
     def auth(self):
         self.close()
         try:
