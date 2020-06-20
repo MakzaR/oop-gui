@@ -10,6 +10,7 @@ pydantic = "^1.4"
 pyqt5 = "^5.15.0"
 unify = "^0.5"
 requests = "^2.24.0"
+pyqtgraph = "^0.11.0"
 
 [tool.poetry.scripts]
 start_gui = "src.view.main:main"

@@ -9,6 +9,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from pyqtgraph import PlotWidget
 
 
 class Ui_CurrencyWindow(object):
@@ -19,7 +20,7 @@ class Ui_CurrencyWindow(object):
         self.centralwidget.setObjectName("centralwidget")
         self.gridLayout = QtWidgets.QGridLayout(self.centralwidget)
         self.gridLayout.setObjectName("gridLayout")
-        self.graphicsView = QtWidgets.QGraphicsView(self.centralwidget)
+        self.graphicsView = PlotWidget(self.centralwidget)
         self.graphicsView.setObjectName("graphicsView")
         self.gridLayout.addWidget(self.graphicsView, 3, 2, 1, 1)
         self.buyAndSell = QtWidgets.QWidget(self.centralwidget)

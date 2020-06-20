@@ -1,4 +1,3 @@
-
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMainWindow, QPushButton, QTableWidgetItem
@@ -94,7 +93,11 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             self.operationsTable.setRowCount(row + 1)
 
             self.operationsTable.setItem(
-                row, 0, QTableWidgetItem('Покупка' if i.operation_type == OperationType.BUY else 'Продажа')
+                row,
+                0,
+                QTableWidgetItem(
+                    'Покупка' if i.operation_type == OperationType.BUY else 'Продажа'
+                ),
             )
             self.operationsTable.setItem(row, 1, QTableWidgetItem(i.currency_name))
             self.operationsTable.setItem(row, 2, QTableWidgetItem((str(i.amount))))
