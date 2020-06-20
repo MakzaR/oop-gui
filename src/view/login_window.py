@@ -16,8 +16,6 @@ class LoginForm(Ui_AuthorizationForm, QMainWindow):
         self.confirmButton.clicked.connect(self.auth)
         self.cancelButton.clicked.connect(lambda: self.close())
 
-        self.mainWindow = MainWindow(self)
-
     def init(self):
         self.show()
 
@@ -27,6 +25,7 @@ class LoginForm(Ui_AuthorizationForm, QMainWindow):
         self.close()
         try:
             user = self._authorize.sign_in(self.login.text())
-            self.mainWindow.init(user)
+            self.mainWindow = MainWindow(user, self)
+            self.mainWindow.init()
         except ConnectionError:
             QMessageBox(text=Message.CONNECTION_ERROR.value).exec()

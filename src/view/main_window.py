@@ -10,10 +10,6 @@ from src.view.currency_window import CurrencyWindow
 from ui.main import Ui_MainWindow
 
 
-class CurrencyData(NamedTuple):
-    name: str
-    price: int
-    change: str
 
 
 class OperationData(NamedTuple):
@@ -23,17 +19,7 @@ class OperationData(NamedTuple):
     account: str
 
 
-all_currencies_data = [
-    CurrencyData('Крипта', 1, '+1%'),
-    CurrencyData('Биток', 2, '-10%'),
-    CurrencyData('Эфирbvbvbdfsbbsfbbaasdadadadasdfb', 20, '+210%'),
-]
 
-my_currencies_data = [
-    CurrencyData('Крипта', 1, '+1%'),
-    CurrencyData('Биток', 2, '-10%'),
-    CurrencyData('Эфирbvbvbdfsbbsfbbfb', 20, '+210%'),
-]
 
 operation_data = [
     OperationData('Продажа', 'Биток', 20, '+ 20 у. е.'),
@@ -61,14 +47,15 @@ operation_data = [
     OperationData('Продажа', 'Биток', 20, '+ 20 у. е.'),
     OperationData('Продажа', 'Биток', 20, '+ 20 у. е.'),
     OperationData('Продажа', 'Биток', 20, '+ 20 у. е.'),
-    OperationData('Продажа', 'Биток', 20, '+ 20 у. е.')
+    OperationData('Продажа', 'Биток', 20, '+ 20 у. е.'),
 ]
 
 
 class MainWindow(Ui_MainWindow, QMainWindow):
-    def __init__(self, parent):
+    def __init__(self, user: User,parent):
         super().__init__(parent, Qt.WindowCloseButtonHint | Qt.WindowMinimizeButtonHint)
         self.setupUi(self)
+        self.user: User = user
 
         self.searchButton.clicked.connect(self.search_item)
         self.refreshButton.clicked.connect(self.refresh_tables)
@@ -90,7 +77,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
 
     def fill_all_currencies(self):
         self.allCurrenciesTable.clear()
-        currencies = self._client.get_currencies()
+        currencies = self._client.get_all_currencies()
         labels = ['Название', 'Цена продажи', 'Цена покупки', '']
         create_headers(self.allCurrenciesTable, labels)
 
@@ -102,17 +89,22 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             self.allCurrenciesTable.setRowCount(row + 1)
 
             self.allCurrenciesTable.setItem(row, 0, QTableWidgetItem(i.name))
-            self.allCurrenciesTable.setItem(row, 1, QTableWidgetItem(str(i.selling_price)))
-            self.allCurrenciesTable.setItem(row, 2, QTableWidgetItem(str(i.purchasing_price)))
+            self.allCurrenciesTable.setItem(
+                row, 1, QTableWidgetItem(str(i.selling_price))
+            )
+            self.allCurrenciesTable.setItem(
+                row, 2, QTableWidgetItem(str(i.purchasing_price))
+            )
 
             self.allCurrenciesTable.setCellWidget(row, 3, detail_button)
 
     def fill_my_currencies(self):
         self.myCurrenciesTable.clear()
 
-        labels = ['Название', 'Колличество','Цена продажи', 'Цена покупки', '']
+        labels = ['Название', 'Колличество', 'Цена продажи', 'Цена покупки', '']
         create_headers(self.myCurrenciesTable, labels)
-        for i in my_currencies_data:
+        currencies = self._client.get_user_currencies(self.user.id)
+        for i in currencies:
             detail_button = QPushButton('Подробнее')
             detail_button.clicked.connect(self.show_details)
 
@@ -120,10 +112,11 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             self.myCurrenciesTable.setRowCount(row + 1)
 
             self.myCurrenciesTable.setItem(row, 0, QTableWidgetItem(i.name))
-            self.myCurrenciesTable.setItem(row, 1, QTableWidgetItem(str(i.price)))
-            self.myCurrenciesTable.setItem(row, 2, QTableWidgetItem(str(i.price)))
+            self.myCurrenciesTable.setItem(row, 1, QTableWidgetItem(str(i.amount)))
+            self.myCurrenciesTable.setItem(row, 2, QTableWidgetItem(str(i.selling_price)))
+            self.myCurrenciesTable.setItem(row, 3, QTableWidgetItem(str(i.purchasing_price)))
 
-            self.myCurrenciesTable.setCellWidget(row, 3, detail_button)
+            self.myCurrenciesTable.setCellWidget(row, 4, detail_button)
 
     def fill_operations(self):
         self.operationsTable.clear()
@@ -144,7 +137,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     def show_details(self):
         self.currencyWindow.init()
 
-    def init(self, user: User):
+    def init(self):
         self.fill_all_currencies()
         self.fill_my_currencies()
         self.fill_operations()
