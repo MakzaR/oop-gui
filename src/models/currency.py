@@ -1,14 +1,18 @@
+from datetime import datetime, date
 from decimal import Decimal
 
 from pydantic import BaseModel
 
 
-class Currency(BaseModel):
-    id: int
-    name: str
+class CurrencyHistory(BaseModel):
     purchasing_price: Decimal
     selling_price: Decimal
-    time: str
+    time: datetime
+
+
+class Currency(CurrencyHistory):
+    id: int
+    name: str
 
 
 class CurrencyItem(BaseModel):
@@ -19,4 +23,4 @@ class CurrencyItem(BaseModel):
 
 
 class UserCurrency(Currency):
-    amount: Decimal
+    amount: Decimal = Decimal('0')

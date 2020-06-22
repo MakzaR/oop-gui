@@ -5,6 +5,7 @@ from requests.exceptions import ConnectionError
 
 from src.DAL.client import Client
 from src.message import Message
+from src.models.currency import UserCurrency
 from src.models.operation import OperationType
 from src.models.user import User
 from src.view.currency_window import CurrencyWindow
@@ -20,8 +21,6 @@ class MainWindow(Ui_MainWindow, QMainWindow):
 
         self.searchButton.clicked.connect(self.search_item)
         self.refreshButton.clicked.connect(self.refresh_tables)
-
-        self.currencyWindow = CurrencyWindow(self)
         self._client = Client()
 
     '''Логика кнопки поиска'''
@@ -41,11 +40,9 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         currencies = self._client.get_all_currencies()
         labels = ['Название', 'Цена продажи', 'Цена покупки', '']
         create_headers(self.allCurrenciesTable, labels)
-
         for i in currencies:
             detail_button = QPushButton('Подробнее')
-            detail_button.clicked.connect(self.show_details)
-
+            detail_button.clicked.connect(lambda a,i=i: self.show_details(self.user, UserCurrency(**i.dict())))
             row = self.allCurrenciesTable.rowCount()
             self.allCurrenciesTable.setRowCount(row + 1)
 
@@ -65,10 +62,9 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         labels = ['Название', 'Колличество', 'Цена продажи', 'Цена покупки', '']
         create_headers(self.myCurrenciesTable, labels)
         currencies = self._client.get_user_currencies(self.user.id)
-
         for i in currencies:
             detail_button = QPushButton('Подробнее')
-            detail_button.clicked.connect(self.show_details)
+            detail_button.clicked.connect(lambda: self.show_details(self.user, i))
             row = self.myCurrenciesTable.rowCount()
             self.myCurrenciesTable.setRowCount(row + 1)
 
@@ -91,7 +87,6 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         for i in operations:
             row = self.operationsTable.rowCount()
             self.operationsTable.setRowCount(row + 1)
-
             self.operationsTable.setItem(
                 row,
                 0,
@@ -104,13 +99,14 @@ class MainWindow(Ui_MainWindow, QMainWindow):
 
     '''Логика кнопки "Подробнее"'''
 
-    def show_details(self):
-        self.currencyWindow.init()
+    def show_details(self, user: User, currency: UserCurrency):
+        CurrencyWindow(self, user, currency).init()
 
     def init(self):
         self.operationsTable.setRowCount(0)
         self.allCurrenciesTable.setRowCount(0)
         self.myCurrenciesTable.setRowCount(0)
+        self.user = self._client.sign_in(self.user.login)
         try:
             self.fill_all_currencies()
             self.fill_my_currencies()
