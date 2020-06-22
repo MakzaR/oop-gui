@@ -40,9 +40,12 @@ class CurrencyWindow(Ui_CurrencyWindow, QMainWindow):
         self.setupUi(self)
         self.buyButton.clicked.connect(self.buy)
         self.sellButton.clicked.connect(self.sell)
+        self.refreshButton.clicked.connect(self.refresh)
         self._user: User = user
         self._currency: UserCurrency = currency
         self._client = Client()
+
+        self.setWindowTitle(currency.name)
 
     def set_text_info(self, selling_price, buying_price, account):
         self.buyingPrice.setText('Cтоимость покупки: ' + str(buying_price) + ' у.е.')
@@ -113,6 +116,10 @@ class CurrencyWindow(Ui_CurrencyWindow, QMainWindow):
     def sell(self):
         self.sell_window = SellWindow(self, self._client, self._user, self._currency)
         self.sell_window.init()
+
+    def refresh(self):
+        self.graphicsView.plotItem.clear()
+        self.init()
 
     def init(self):
         self.draw_graphs()

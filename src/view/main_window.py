@@ -1,6 +1,6 @@
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QMainWindow, QPushButton, QTableWidgetItem
+from PyQt5.QtWidgets import QMainWindow, QPushButton, QTableWidgetItem, QMessageBox
 from requests.exceptions import ConnectionError
 
 from src.DAL.client import Client
@@ -9,7 +9,7 @@ from src.models.currency import UserCurrency
 from src.models.operation import OperationType
 from src.models.user import User
 from src.view.currency_window import CurrencyWindow
-from src.view.utils import show_error
+# from src.view.utils import show_error
 from ui.main import Ui_MainWindow
 
 
@@ -112,7 +112,8 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             self.fill_my_currencies()
             self.fill_operations()
         except ConnectionError:
-            show_error(Message.CONNECTION_ERROR.value)
+            QMessageBox().warning(self, 'Ошибка', Message.CONNECTION_ERROR.value)
+            # show_error(Message.CONNECTION_ERROR.value)
             return
         self.show()
 
