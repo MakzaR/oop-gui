@@ -26,6 +26,7 @@ class SellWindow(Ui_SellWindow, QMainWindow):
         except Exception:
             raise Exception()
         self._client.make_operation(OperationType.SELL, self._user, self._currency, d)
+        self.close()
 
     def init(self):
         self.show()

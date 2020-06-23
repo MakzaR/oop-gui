@@ -54,6 +54,9 @@ class Ui_CurrencyWindow(object):
         self.widget.setObjectName("widget")
         self.info.addWidget(self.widget)
         self.gridLayout.addLayout(self.info, 1, 2, 1, 1)
+        self.refreshButton = QtWidgets.QPushButton(self.centralwidget)
+        self.refreshButton.setObjectName("refreshButton")
+        self.gridLayout.addWidget(self.refreshButton, 4, 2, 1, 1, QtCore.Qt.AlignLeft)
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
@@ -67,6 +70,7 @@ class Ui_CurrencyWindow(object):
         self.buyingPrice.setText(_translate("MainWindow", "Стоимость покупки: "))
         self.sellingPrice.setText(_translate("MainWindow", "Стоимость продажи: "))
         self.account.setText(_translate("MainWindow", "Ваш счёт: "))
+        self.refreshButton.setText(_translate("MainWindow", "Обновить"))
 
 
 if __name__ == "__main__":

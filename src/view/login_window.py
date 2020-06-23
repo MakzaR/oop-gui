@@ -1,11 +1,11 @@
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QMainWindow
+from PyQt5.QtWidgets import QMainWindow, QMessageBox
 from requests.exceptions import ConnectionError
 
 from src.DAL.client import Client
 from src.message import Message
 from src.view.main_window import MainWindow
-from src.view.utils import show_error
+# from src.view.utils import show_error
 from ui.auth_form import Ui_AuthorizationForm
 
 
@@ -25,7 +25,8 @@ class LoginForm(Ui_AuthorizationForm, QMainWindow):
         try:
             user = self._authorize.sign_in(self.login.text())
         except ConnectionError:
-            show_error(Message.CONNECTION_ERROR.value)
+            QMessageBox().warning(self, 'Ошибка', Message.CONNECTION_ERROR.value)
+            # show_error(Message.CONNECTION_ERROR.value)
             return
         self.mainWindow = MainWindow(user, self)
         self.mainWindow.init()
