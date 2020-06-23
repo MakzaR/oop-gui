@@ -23,10 +23,14 @@ class LoginForm(Ui_AuthorizationForm, QMainWindow):
     def auth(self):
         self.close()
         try:
-            user = self._authorize.sign_in(self.login.text())
+            text = self.login.text()
+            if text:
+                user = self._authorize.sign_in(text)
+            else:
+                QMessageBox().warning(self, 'Ошибка', 'Неверные данные')
+                return
         except ConnectionError:
             QMessageBox().warning(self, 'Ошибка', Message.CONNECTION_ERROR.value)
-            # show_error(Message.CONNECTION_ERROR.value)
             return
         self.mainWindow = MainWindow(user, self)
         self.mainWindow.init()

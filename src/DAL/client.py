@@ -10,6 +10,7 @@ from src.DAL.user_currencies import (
     AbstractUserCurrencyGetter,
     ConcreteUserCurrencyGetter,
 )
+from src.DAL.user_getter import ConcreteUserGetter, AbstractUserGetter
 from src.DAL.utils import run_in_threadpool
 from src.models.currency import Currency, UserCurrency, CurrencyHistory
 from src.models.operation import OperationToShow, OperationType
@@ -24,7 +25,8 @@ class Client:
             user_currencies_getter: AbstractUserCurrencyGetter = ConcreteUserCurrencyGetter(),
             user_operations_getter: AbstractOperationsGetter = ConcreteOperationsGetter(),
             currency_history_getter: AbstractCurrencyHistoryGetter = ConcreteCurrencyHistoryGetter(),
-            operation_maker: AbstractOperationMaker = ConcreteOperationMaker()
+            operation_maker: AbstractOperationMaker = ConcreteOperationMaker(),
+            user_getter: AbstractUserGetter = ConcreteUserGetter()
     ):
         self._authorization: AbstractAuthorization = authorization
         self._currencies_getter: AbstractCurrenciesGetter = currencies_getter
@@ -32,6 +34,7 @@ class Client:
         self._operations_getter = user_operations_getter
         self._currency_history_getter = currency_history_getter
         self._operation_maker = operation_maker
+        self._user_getter: AbstractUserGetter = user_getter
 
     @run_in_threadpool
     def get_operations(self, user_id: int) -> List[OperationToShow]:
@@ -56,3 +59,11 @@ class Client:
     @run_in_threadpool
     def make_operation(self, operation_type: OperationType, user: User, currency: UserCurrency, amount: Decimal):
         return self._operation_maker.make(operation_type, user, currency, amount)
+
+    @run_in_threadpool
+    def get_user(self, user_id: int) -> User:
+        return self._user_getter.get(user_id)
+
+    @run_in_threadpool
+    def get_user_currency(self, user_id: int, currency_id: int) -> UserCurrency:
+        return self._user_currencies_getter.get_currency(user_id,currency_id)

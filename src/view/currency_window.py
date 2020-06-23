@@ -3,41 +3,22 @@ from typing import List, Dict, Optional
 
 import pyqtgraph as pg
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QMainWindow
+from PyQt5.QtWidgets import QMainWindow, QMessageBox
 
 from src.DAL.client import Client
+from src.message import Message
 from src.models.currency import CurrencyHistory, UserCurrency
 from src.models.user import User
 from src.view.buy_window import BuyWindow
 from src.view.sell_wndow import SellWindow
 from ui.currency import Ui_CurrencyWindow
-
-
-# selling_prices = [1.337, 1.488, 1.556, 1.246, 1.889, 1.337, 1.488, 1.556, 1.246, 1.889, 1.556, 1.246, 1.889]
-# purchasing_prices = [2.534, 2.679, 2.365, 2.456, 2.345, 2.534, 2.679, 2.365, 2.456, 2.345, 2.365, 2.456, 2.345]
-# time = [
-#     datetime(2020, 5, 1, 0, 0, 0, 111),
-#     datetime(2020, 5, 2, 0, 0, 0),
-#     datetime(2020, 5, 3, 0, 0, 0),
-#     datetime(2020, 5, 4, 0, 0, 0),
-#     datetime(2020, 5, 5, 0, 0, 0),
-#     datetime(2020, 5, 7, 0, 0, 0),
-#     datetime(2020, 5, 8, 0, 0, 0),
-#     datetime(2020, 5, 9, 0, 0, 0),
-#     datetime(2020, 5, 10, 0, 0, 0),
-#     datetime(2020, 5, 11, 0, 0, 0),
-#     datetime(2020, 5, 12, 0, 0, 0),
-#     datetime(2020, 5, 13, 0, 0, 0),
-#     datetime(2020, 5, 14, 0, 0, 0),
-# ]
-#
-# time = dict(enumerate(time))
-
+from requests.exceptions import ConnectionError
 
 class CurrencyWindow(Ui_CurrencyWindow, QMainWindow):
     def __init__(self, parent, user: User, currency: UserCurrency):
         super().__init__(parent, Qt.WindowCloseButtonHint | Qt.WindowMinimizeButtonHint)
         self.setupUi(self)
+        self.parent = parent
         self.buyButton.clicked.connect(self.buy)
         self.sellButton.clicked.connect(self.sell)
         self.refreshButton.clicked.connect(self.refresh)
@@ -53,6 +34,8 @@ class CurrencyWindow(Ui_CurrencyWindow, QMainWindow):
         self.account.setText('На счёте: ' + str(account) + ' у.е.')
 
     def draw_graphs(self):
+        self._user = self._client.get_user(self._user.id)
+        self._currency = self._client.get_user_currency(self._user.id, self._currency.id)
         pg.setConfigOptions(antialias=True)
         history_items: List[CurrencyHistory] = self._client.get_currency_history(self._currency.id)
         selling_prices = list(map(lambda item: float(item.selling_price), history_items))
@@ -110,7 +93,7 @@ class CurrencyWindow(Ui_CurrencyWindow, QMainWindow):
         )
 
     def buy(self):
-        self.buy_window = BuyWindow(self,self._client, self._user, self._currency)
+        self.buy_window = BuyWindow(self, self._client, self._user, self._currency)
         self.buy_window.init()
 
     def sell(self):
@@ -118,8 +101,11 @@ class CurrencyWindow(Ui_CurrencyWindow, QMainWindow):
         self.sell_window.init()
 
     def refresh(self):
-        self.graphicsView.plotItem.clear()
-        self.init()
+        try:
+            self.graphicsView.plotItem.clear()
+            self.init()
+        except ConnectionError:
+            QMessageBox().warning(self, 'Ошибка', str(Message.CONNECTION_ERROR.value))
 
     def init(self):
         self.draw_graphs()

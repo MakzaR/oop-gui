@@ -16,7 +16,6 @@ class Currency(CurrencyHistory):
 
 
 class CurrencyItem(BaseModel):
-    id: int
     user_id: int
     currency_id: int
     amount: Decimal

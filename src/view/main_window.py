@@ -42,7 +42,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         create_headers(self.allCurrenciesTable, labels)
         for i in currencies:
             detail_button = QPushButton('Подробнее')
-            detail_button.clicked.connect(lambda a,i=i: self.show_details(self.user, UserCurrency(**i.dict())))
+            detail_button.clicked.connect(lambda a, i=i: self.show_details(self.user, UserCurrency(**i.dict())))
             row = self.allCurrenciesTable.rowCount()
             self.allCurrenciesTable.setRowCount(row + 1)
 
@@ -64,7 +64,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         currencies = self._client.get_user_currencies(self.user.id)
         for i in currencies:
             detail_button = QPushButton('Подробнее')
-            detail_button.clicked.connect(lambda: self.show_details(self.user, i))
+            detail_button.clicked.connect(lambda f, i=i: self.show_details(self.user, i))
             row = self.myCurrenciesTable.rowCount()
             self.myCurrenciesTable.setRowCount(row + 1)
 
@@ -84,6 +84,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         labels = ['Операция', 'Название', 'Количество']
         create_headers(self.operationsTable, labels)
         operations = self._client.get_operations(self.user.id)
+        operations.reverse()
         for i in operations:
             row = self.operationsTable.rowCount()
             self.operationsTable.setRowCount(row + 1)
@@ -113,7 +114,6 @@ class MainWindow(Ui_MainWindow, QMainWindow):
             self.fill_operations()
         except ConnectionError:
             QMessageBox().warning(self, 'Ошибка', Message.CONNECTION_ERROR.value)
-            # show_error(Message.CONNECTION_ERROR.value)
             return
         self.show()
 
