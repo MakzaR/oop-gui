@@ -27,7 +27,11 @@ class ConcreteUserCurrencyGetter(AbstractUserCurrencyGetter):
     def get_currency(self, user_id: int, currency_id: int) -> UserCurrency:
         res = requests.get(f'{Urls.USERS.value}/{user_id}/currencies/{currency_id}')
         if res.status_code == HTTPStatus.BAD_REQUEST:
-            return self._get_currency(CurrencyItem(user_id=user_id, currency_id=currency_id, amount=Decimal('0')))
+            return self._get_currency(
+                CurrencyItem(
+                    user_id=user_id, currency_id=currency_id, amount=Decimal('0')
+                )
+            )
         return self._get_currency(CurrencyItem.parse_obj(res.json()))
 
     def _get_currency(self, currency_item: CurrencyItem) -> UserCurrency:

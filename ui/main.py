@@ -59,19 +59,7 @@ class Ui_MainWindow(object):
         self.refreshButton = QtWidgets.QPushButton(self.tableWidget)
         self.refreshButton.setObjectName("refreshButton")
         self.gridLayout_2.addWidget(self.refreshButton, 3, 1, 1, 1, QtCore.Qt.AlignLeft)
-        self.gridLayout.addWidget(self.tableWidget, 1, 1, 1, 1)
-        self.searchWidget = QtWidgets.QWidget(self.mainWidget)
-        self.searchWidget.setObjectName("searchWidget")
-        self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.searchWidget)
-        self.verticalLayout_3.setContentsMargins(-1, 45, -1, -1)
-        self.verticalLayout_3.setObjectName("verticalLayout_3")
-        self.search = QtWidgets.QLineEdit(self.searchWidget)
-        self.search.setObjectName("search")
-        self.verticalLayout_3.addWidget(self.search)
-        self.searchButton = QtWidgets.QPushButton(self.searchWidget)
-        self.searchButton.setObjectName("searchButton")
-        self.verticalLayout_3.addWidget(self.searchButton)
-        self.gridLayout.addWidget(self.searchWidget, 1, 0, 1, 1, QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.gridLayout.addWidget(self.tableWidget, 1, 0, 1, 1)
         MainWindow.setCentralWidget(self.mainWidget)
 
         self.retranslateUi(MainWindow)
@@ -85,8 +73,6 @@ class Ui_MainWindow(object):
         self.tabs.setTabText(self.tabs.indexOf(self.myCurrenciesTab), _translate("MainWindow", "Мои валюты"))
         self.tabs.setTabText(self.tabs.indexOf(self.operationsTab), _translate("MainWindow", "Операции"))
         self.refreshButton.setText(_translate("MainWindow", "Обновить"))
-        self.search.setPlaceholderText(_translate("MainWindow", "Поиск..."))
-        self.searchButton.setText(_translate("MainWindow", "Найти"))
 
 
 if __name__ == "__main__":

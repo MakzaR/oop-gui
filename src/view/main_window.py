@@ -1,6 +1,6 @@
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QMainWindow, QPushButton, QTableWidgetItem, QMessageBox
+from PyQt5.QtWidgets import QMainWindow, QMessageBox, QPushButton, QTableWidgetItem
 from requests.exceptions import ConnectionError
 
 from src.DAL.client import Client
@@ -9,7 +9,6 @@ from src.models.currency import UserCurrency
 from src.models.operation import OperationType
 from src.models.user import User
 from src.view.currency_window import CurrencyWindow
-# from src.view.utils import show_error
 from ui.main import Ui_MainWindow
 
 
@@ -19,21 +18,13 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self.setupUi(self)
         self.user: User = user
 
-        self.searchButton.clicked.connect(self.search_item)
         self.refreshButton.clicked.connect(self.refresh_tables)
         self._client = Client()
-
-    '''Логика кнопки поиска'''
-
-    def search_item(self):
-        pass
 
     '''Логика кнопки обновления'''
 
     def refresh_tables(self):
         self.init()
-
-    '''Тут чистый треш, но я просто тестил заполнение данных'''
 
     def fill_all_currencies(self):
         self.allCurrenciesTable.clear()
@@ -42,7 +33,9 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         create_headers(self.allCurrenciesTable, labels)
         for i in currencies:
             detail_button = QPushButton('Подробнее')
-            detail_button.clicked.connect(lambda a, i=i: self.show_details(self.user, UserCurrency(**i.dict())))
+            detail_button.clicked.connect(
+                lambda a, i=i: self.show_details(self.user, UserCurrency(**i.dict()))
+            )
             row = self.allCurrenciesTable.rowCount()
             self.allCurrenciesTable.setRowCount(row + 1)
 
@@ -64,7 +57,9 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         currencies = self._client.get_user_currencies(self.user.id)
         for i in currencies:
             detail_button = QPushButton('Подробнее')
-            detail_button.clicked.connect(lambda f, i=i: self.show_details(self.user, i))
+            detail_button.clicked.connect(
+                lambda f, i=i: self.show_details(self.user, i)
+            )
             row = self.myCurrenciesTable.rowCount()
             self.myCurrenciesTable.setRowCount(row + 1)
 

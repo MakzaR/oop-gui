@@ -5,7 +5,6 @@ from requests.exceptions import ConnectionError
 from src.DAL.client import Client
 from src.message import Message
 from src.view.main_window import MainWindow
-# from src.view.utils import show_error
 from ui.auth_form import Ui_AuthorizationForm
 
 
