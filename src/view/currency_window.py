@@ -69,7 +69,7 @@ class CurrencyWindow(Ui_CurrencyWindow, QMainWindow):
             selling_prices[-1],
             purchasing_prices[-1],
             str(self._user.money),
-            'ТУТ КОЛ-ВО ВАЛЮТЫ У ПОЛЬЗОВАТЕЛЯ',
+            str(self._currency.amount),
             self._currency.name,
         )
         self.graphicsView.setBackground('w')
