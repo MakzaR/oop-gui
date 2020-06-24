@@ -3,6 +3,7 @@ from decimal import Decimal
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMainWindow, QMessageBox
 from requests.exceptions import ConnectionError
+
 from src.DAL.client import Client
 from src.exceptions import DALError
 from src.message import Message
@@ -30,9 +31,13 @@ class SellWindow(Ui_SellWindow, QMainWindow):
             except Exception:
                 raise DALError('Кол-во должно быть числом')
             try:
-                self._client.make_operation(OperationType.SELL, self._user, self._currency, d)
+                self._client.make_operation(
+                    OperationType.SELL, self._user, self._currency, d
+                )
             except ConnectionError:
-                QMessageBox().warning(self, 'Ошибка', str(Message.CONNECTION_ERROR.value))
+                QMessageBox().warning(
+                    self, 'Ошибка', str(Message.CONNECTION_ERROR.value)
+                )
             self.parent.refresh()
             self.close()
         except DALError as e:

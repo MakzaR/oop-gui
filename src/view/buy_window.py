@@ -1,5 +1,8 @@
+from decimal import Decimal
+
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMainWindow, QMessageBox
+from requests.exceptions import ConnectionError
 
 from src.DAL.client import Client
 from src.exceptions import DALError
@@ -8,8 +11,7 @@ from src.models.currency import UserCurrency
 from src.models.operation import OperationType
 from src.models.user import User
 from ui.buy_window import Ui_BuyWindow
-from decimal import Decimal
-from requests.exceptions import ConnectionError
+
 
 class BuyWindow(Ui_BuyWindow, QMainWindow):
     def __init__(self, parent, client: Client, user: User, currency: UserCurrency):
@@ -29,15 +31,18 @@ class BuyWindow(Ui_BuyWindow, QMainWindow):
             except Exception:
                 raise DALError('Кол-во должно быть числом')
             try:
-                self._client.make_operation(OperationType.BUY, self._user, self._currency, d)
+                self._client.make_operation(
+                    OperationType.BUY, self._user, self._currency, d
+                )
                 self.parent.refresh()
                 self.close()
             except ConnectionError:
-                QMessageBox().warning(self, 'Ошибка', str(Message.CONNECTION_ERROR.value))
+                QMessageBox().warning(
+                    self, 'Ошибка', str(Message.CONNECTION_ERROR.value)
+                )
 
         except DALError as e:
             QMessageBox().warning(self, 'Ошибка', str(e))
-
 
     def init(self):
         self.show()
