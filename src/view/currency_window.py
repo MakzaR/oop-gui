@@ -30,7 +30,12 @@ class CurrencyWindow(Ui_CurrencyWindow, QMainWindow):
         self.setWindowTitle(currency.name)
 
     def set_text_info(
-        self, selling_price, buying_price, account, currency_amount, currency_name
+        self,
+        selling_price: str,
+        buying_price: str,
+        account: str,
+        currency_amount: str,
+        currency_name: str,
     ):
         self.buyingPrice.setText('Cтоимость покупки: ' + str(buying_price) + ' у.е.')
         self.sellingPrice.setText('Стоимость продажи: ' + str(selling_price) + ' у.е.')
@@ -99,7 +104,16 @@ class CurrencyWindow(Ui_CurrencyWindow, QMainWindow):
             list(time.keys()), selling_prices, 'Цена продажи', (255, 0, 0), 1.5, 'o', 5,
         )
 
-    def plot(self, x, y, plot_name, color, width, symbol, symbol_size):
+    def plot(
+        self,
+        x: list,
+        y: list,
+        plot_name: str,
+        color: tuple,
+        width: float,
+        symbol: str,
+        symbol_size: int,
+    ):
         pen = pg.mkPen(color=color, width=width)
         self.graphicsView.plot(
             x,

@@ -1,6 +1,14 @@
+from typing import List
+
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QMainWindow, QMessageBox, QPushButton, QTableWidgetItem
+from PyQt5.QtWidgets import (
+    QDesktopWidget,
+    QMainWindow,
+    QMessageBox,
+    QPushButton,
+    QTableWidgetItem,
+)
 from requests.exceptions import ConnectionError
 
 from src.DAL.client import Client
@@ -98,7 +106,15 @@ class MainWindow(Ui_MainWindow, QMainWindow):
     def show_details(self, user: User, currency: UserCurrency):
         CurrencyWindow(self, user, currency).init()
 
+    def center(self):
+        frame = self.frameGeometry()
+        center_point = QDesktopWidget().availableGeometry().center()
+
+        frame.moveCenter(center_point)
+        self.move(frame.topLeft())
+
     def init(self):
+        self.center()
         self.operationsTable.setRowCount(0)
         self.allCurrenciesTable.setRowCount(0)
         self.myCurrenciesTable.setRowCount(0)
@@ -113,7 +129,7 @@ class MainWindow(Ui_MainWindow, QMainWindow):
         self.show()
 
 
-def create_headers(table_name, labels):
+def create_headers(table_name, labels: List[str]):
     table_name.setColumnCount(len(labels))
     table_name.setHorizontalHeaderLabels(labels)
 

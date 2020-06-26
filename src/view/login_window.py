@@ -1,5 +1,5 @@
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QMainWindow, QMessageBox
+from PyQt5.QtWidgets import QDesktopWidget, QMainWindow, QMessageBox
 from requests.exceptions import ConnectionError
 
 from src.DAL.client import Client
@@ -16,9 +16,6 @@ class LoginForm(Ui_AuthorizationForm, QMainWindow):
         self.confirmButton.clicked.connect(self.auth)
         self.cancelButton.clicked.connect(lambda: self.close())
 
-    def init(self):
-        self.show()
-
     def auth(self):
         self.close()
         try:
@@ -33,3 +30,14 @@ class LoginForm(Ui_AuthorizationForm, QMainWindow):
             return
         self.mainWindow = MainWindow(user, self)
         self.mainWindow.init()
+
+    def center(self):
+        frame = self.frameGeometry()
+        center_point = QDesktopWidget().availableGeometry().center()
+
+        frame.moveCenter(center_point)
+        self.move(frame.topLeft())
+
+    def init(self):
+        self.center()
+        self.show()

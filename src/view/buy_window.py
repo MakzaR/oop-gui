@@ -1,7 +1,7 @@
 from decimal import Decimal
 
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QMainWindow, QMessageBox
+from PyQt5.QtWidgets import QDesktopWidget, QMainWindow, QMessageBox
 from requests.exceptions import ConnectionError
 
 from src.DAL.client import Client
@@ -44,5 +44,13 @@ class BuyWindow(Ui_BuyWindow, QMainWindow):
         except DALError as e:
             QMessageBox().warning(self, 'Ошибка', str(e))
 
+    def center(self):
+        frame = self.frameGeometry()
+        center_point = QDesktopWidget().availableGeometry().center()
+
+        frame.moveCenter(center_point)
+        self.move(frame.topLeft())
+
     def init(self):
+        self.center()
         self.show()
